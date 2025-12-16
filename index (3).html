@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thoughts for the Universe</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #1b2735 0%, #090a0f 60%);
+      color: #eaeaf0;
+      min-height: 100vh;
+    }
+    header {
+      padding: 24px;
+      text-align: center;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    header h1 { margin: 0; font-size: 2.2rem; }
+    header p { margin-top: 8px; opacity: 0.85; }nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px;
+  flex-wrap: wrap;
+}
+nav button {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #eaeaf0;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+nav button:hover, nav button.active {
+  background: rgba(255,255,255,0.15);
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+section { display: none; }
+section.active { display: block; }
+
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+textarea, input {
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  color: #fff;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+textarea { min-height: 120px; resize: vertical; }
+
+.btn {
+  background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
+  color: #000;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn:hover { opacity: 0.9; }
+
+.feed-item {
+  border-left: 3px solid #91eae4;
+  padding-left: 12px;
+  margin-bottom: 14px;
+}
+
+.meta {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+  </style>
+</head>
+<body>  <header>
+    <h1>🌌 Thoughts for the Universe</h1>
+    <p>A space where human thoughts and theories meet the cosmos</p>
+  </header>  <nav>
+    <button class="active" onclick="showSection('send')">Send a Thought</button>
+    <button onclick="showSection('theory')">Human Theories</button>
+    <button onclick="showSection('feed')">Read Thoughts</button>
+    <button onclick="showSection('about')">About</button>
+  </nav>  <main><!-- Send Thought -->
+<section id="send" class="active">
+  <div class="card">
+    <h2>Send Your Thought to the Universe</h2>
+    <textarea id="thoughtText" placeholder="Write your thought..."></textarea>
+    <label><input type="checkbox" id="anon" /> Post as Anonymous</label><br><br>
+    <button class="btn" onclick="saveThought()">Send 🌠</button>
+  </div>
+</section>
+
+<!-- Theory -->
+<section id="theory">
+  <div class="card">
+    <h2>Share Your Theory</h2>
+    <input id="theoryTitle" placeholder="Theory Title" />
+    <textarea id="theoryText" placeholder="Explain your theory..."></textarea>
+    <button class="btn" onclick="saveTheory()">Publish 🧠</button>
+  </div>
+</section>
+
+<!-- Feed -->
+<section id="feed">
+  <div class="card">
+    <h2>Human Thoughts & Theories</h2>
+    <div id="feedList"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="card">
+    <h2>About This Space</h2>
+    <p>This website is created to allow humans to freely express their thoughts, ideas, and personal theories about life, universe, and consciousness.</p>
+    <p><strong>Creator:</strong> Viju</p>
+    <p>"Your thoughts are not small. The universe listens."</p>
+  </div>
+</section>
+
+  </main>  <footer>
+    © 2025 Thoughts for the Universe
+  </footer>  <script>
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+      if (id === 'feed') loadFeed();
+    }
+
+    function saveThought() {
+      const text = document.getElementById('thoughtText').value.trim();
+      if (!text) return alert('Please write a thought');
+      const anon = document.getElementById('anon').checked;
+      const data = JSON.parse(localStorage.getItem('posts') || '[]');
+      data.unshift({ type: 'thought', text, author: anon ? 'Anonymous' : 'Human', time: new Date().toLocaleString() });
+      localStorage.setItem('posts', JSON.stringify(data));
+      document.getElementById('thoughtText').value = '';
+      alert('Your thought is sent to the universe 🌌');
+    }
+
+    function saveTheory() {
+      const title = document.getElementById('theoryTitle').value.trim();
+      const text = document.getElementById('theoryText').value.trim();
+      if (!title || !text) return alert('Please complete your theory');
+      const data = JSON.parse(localStorage.getItem('posts') || '[]');
+      data.unshift({ type: 'theory', title, text, author: 'Human', time: new Date().toLocaleString() });
+      localStorage.setItem('posts', JSON.stringify(data));
+      document.getElementById('theoryTitle').value = '';
+      document.getElementById('theoryText').value = '';
+      alert('Your theory is published 🧠');
+    }
+
+    function loadFeed() {
+      const list = document.getElementById('feedList');
+      list.innerHTML = '';
+      const data = JSON.parse(localStorage.getItem('posts') || '[]');
+      if (data.length === 0) {
+        list.innerHTML = '<p>No thoughts yet. Be the first.</p>';
+        return;
+      }
+      data.forEach((item, index) => {
+        if (!item.likes) item.likes = 0;
+        if (!item.comments) item.comments = [];
+
+        const div = document.createElement('div');
+        div.className = 'feed-item';
+
+        let content = '';
+        if (item.type === 'theory') {
+          content += `<strong>${item.title}</strong><p>${item.text}</p>`;
+        } else {
+          content += `<p>${item.text}</p>`;
+        }
+
+        content += `
+          <button onclick="likePost(${index})">🌌 Like (${item.likes})</button>
+          <div style="margin-top:8px;">
+            <input placeholder="Write a comment..." id="cmt-${index}" />
+            <button onclick="addComment(${index})">💬</button>
+          </div>
+          <div class="meta">${item.author} • ${item.time}</div>
+        `;
+
+        if (item.comments.length > 0) {
+          content += '<div style="margin-top:6px;">';
+          item.comments.forEach(c => {
+            content += `<div class="meta">💭 ${c}</div>`;
+          });
+          content += '</div>';
+        }
+
+        div.innerHTML = content;
+        list.appendChild(div);
+      });
+      localStorage.setItem('posts', JSON.stringify(data));
+    }
+
+    function likePost(index) {
+      const data = JSON.parse(localStorage.getItem('posts') || '[]');
+      data[index].likes = (data[index].likes || 0) + 1;
+      localStorage.setItem('posts', JSON.stringify(data));
+      loadFeed();
+    }
+
+    function addComment(index) {
+      const input = document.getElementById(`cmt-${index}`);
+      const text = input.value.trim();
+      if (!text) return;
+      const data = JSON.parse(localStorage.getItem('posts') || '[]');
+      if (!data[index].comments) data[index].comments = [];
+      data[index].comments.push(text);
+      localStorage.setItem('posts', JSON.stringify(data));
+      loadFeed();
+    }
+  </script></body>
+</html>
